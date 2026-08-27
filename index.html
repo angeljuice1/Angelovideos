@@ -1,1 +1,216 @@
->html<headtitleangelovideos
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angelo Videos</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d0d0f;
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 25px;
+      text-align: center;
+      background: #151519;
+      border-bottom: 1px solid #29292f;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #999;
+    }
+
+    main {
+      width: 90%;
+      max-width: 1000px;
+      margin: 40px auto;
+    }
+
+    .upload-box {
+      background: #17171c;
+      border: 2px dashed #444;
+      border-radius: 16px;
+      padding: 45px 20px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .upload-box h2 {
+      margin-bottom: 12px;
+    }
+
+    .upload-box p {
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .upload-button {
+      display: inline-block;
+      padding: 13px 24px;
+      background: white;
+      color: black;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .upload-button:hover {
+      opacity: 0.85;
+    }
+
+    #videoLibrary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .video-card {
+      background: #17171c;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #29292f;
+    }
+
+    .video-card video {
+      width: 100%;
+      display: block;
+      background: black;
+    }
+
+    .video-info {
+      padding: 15px;
+    }
+
+    .video-info h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      word-break: break-word;
+    }
+
+    .download-button {
+      display: inline-block;
+      padding: 9px 14px;
+      background: #29292f;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #777;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Angelo Videos</h1>
+    <p>Your personal fitness video library</p>
+  </header>
+
+  <main>
+
+    <section class="upload-box">
+      <h2>Upload a Video</h2>
+      <p>Select a video from your device to add it to your library.</p>
+
+      <label for="videoUpload" class="upload-button">
+        Choose Video
+      </label>
+
+      <input
+        type="file"
+        id="videoUpload"
+        accept="video/*"
+      >
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: 20px;">My Videos</h2>
+
+      <div id="videoLibrary">
+        <div class="empty" id="emptyMessage">
+          No videos uploaded yet.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const videoUpload = document.getElementById("videoUpload");
+    const videoLibrary = document.getElementById("videoLibrary");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    videoUpload.addEventListener("change", function () {
+
+      const file = this.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith("video/")) {
+        alert("Please choose a video file.");
+        return;
+      }
+
+      if (emptyMessage) {
+        emptyMessage.remove();
+      }
+
+      const videoURL = URL.createObjectURL(file);
+
+      const card = document.createElement("div");
+      card.className = "video-card";
+
+      card.innerHTML = `
+        <video controls preload="metadata">
+          <source src="${videoURL}" type="${file.type}">
+          Your browser does not support video playback.
+        </video>
+
+        <div class="video-info">
+          <h3>${file.name}</h3>
+
+          <a
+            class="download-button"
+            href="${videoURL}"
+            download="${file.name}"
+          >
+            Download
+          </a>
+        </div>
+      `;
+
+      videoLibrary.prepend(card);
+
+      videoUpload.value = "";
+    });
+  </script>
+
+</body>
+</html>
