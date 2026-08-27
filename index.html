@@ -3,66 +3,423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Angelo Videos</title>
+  <title>Angelo Media</title>
+
   <style>
-    * { box-sizing: border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0d0d0f;
-      color: #fff;
+      min-height: 100vh;
+      color: #493d45;
+      font-family: "DM Sans", sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(210, 174, 190, .35), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(190, 176, 211, .30), transparent 30%),
+        #f4eee8;
     }
+
     header {
-      padding: 28px 20px;
       text-align: center;
-      background: #151519;
-      border-bottom: 1px solid #29292f;
+      padding: 45px 20px 25px;
     }
-    h1 { margin: 0 0 8px; }
-    header p { color: #999; margin: 0; }
-    main {
-      width: 90%;
-      max-width: 1000px;
-      margin: 40px auto;
+
+    .brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(48px, 10vw, 82px);
+      font-weight: 600;
+      color: #604c5b;
+      margin: 0;
+      letter-spacing: 1px;
     }
-    .upload-box {
-      padding: 40px 20px;
-      text-align: center;
-      background: #17171c;
-      border: 2px dashed #444;
-      border-radius: 16px;
-      margin-bottom: 40px;
+
+    .subtitle {
+      margin: 2px 0 25px;
+      color: #8d7883;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-    .upload-box p { color: #999; }
-    input[type="file"] { display: none; }
+
     .upload-button {
       display: inline-block;
-      padding: 13px 24px;
-      background: #fff;
-      color: #000;
-      border-radius: 10px;
+      padding: 13px 25px;
+      border: 1px solid #c7aab9;
+      border-radius: 30px;
+      background: rgba(255,255,255,.65);
+      color: #604c5b;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(91,67,80,.10);
+      transition: .2s;
     }
+
+    .upload-button:hover {
+      transform: translateY(-2px);
+      background: #fff;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
     #status {
-      margin-top: 18px;
-      color: #aaa;
-      min-height: 20px;
+      min-height: 24px;
+      margin-top: 15px;
+      color: #927987;
+      font-size: 14px;
     }
-    #videoLibrary {
+
+    nav {
+      width: min(900px, 92%);
+      margin: 15px auto 35px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      border: 0;
+      background: transparent;
+      color: #806c76;
+      padding: 10px 18px;
+      border-radius: 22px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    nav button.active,
+    nav button:hover {
+      background: rgba(255,255,255,.75);
+      color: #604c5b;
+      box-shadow: 0 4px 15px rgba(91,67,80,.08);
+    }
+
+    main {
+      width: min(1100px, 92%);
+      margin: auto;
+      padding-bottom: 60px;
+    }
+
+    .section-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 34px;
+      color: #604c5b;
+      margin: 0 0 18px;
+    }
+
+    .media-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 22px;
     }
-    .video-card {
-      background: #17171c;
-      border: 1px solid #29292f;
-      border-radius: 14px;
+
+    .card {
       overflow: hidden;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(183,155,169,.5);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(91,67,80,.10);
     }
-    .video-card video {
+
+    .card img,
+    .card video {
       width: 100%;
+      aspect-ratio: 4 / 3;
       display: block;
+      object-fit: cover;
+      background: #ded5d0;
+    }
+
+    .card-info {
+      padding: 13px 15px;
+    }
+
+    .card-info strong {
+      display: block;
+      color: #604c5b;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .file-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px;
+    }
+
+    .file-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 13px;
+      background: #eadde4;
+      font-size: 23px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 60px 20px;
+      text-align: center;
+      color: #a18f98;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 25px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding-top: 30px;
+      }
+
+      .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .card {
+        border-radius: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1 class="brand">Angelo Media</h1>
+  <p class="subtitle">photos · videos · files</p>
+
+  <label class="upload-button" for="mediaUpload">
+    ✦ Add to my collection
+  </label>
+
+  <input
+    id="mediaUpload"
+    type="file"
+    accept="image/*,video/*,.pdf,.doc,.docx,.txt,.zip"
+    multiple
+  >
+
+  <div id="status"></div>
+</header>
+
+<nav>
+  <button class="active" data-section="all">Everything</button>
+  <button data-section="photos">Photos</button>
+  <button data-section="videos">Videos</button>
+  <button data-section="files">Files</button>
+</nav>
+
+<main>
+  <h2 class="section-title" id="sectionTitle">Everything</h2>
+
+  <div class="media-grid" id="mediaGrid">
+    <div class="empty">
+      Your collection is waiting for you ✿
+    </div>
+  </div>
+</main>
+
+<script>
+  const upload = document.getElementById("mediaUpload");
+  const grid = document.getElementById("mediaGrid");
+  const status = document.getElementById("status");
+  const sectionTitle = document.getElementById("sectionTitle");
+
+  let currentSection = "all";
+
+  const items = [];
+
+  function getType(file) {
+    if (file.type.startsWith("image/")) return "photos";
+    if (file.type.startsWith("video/")) return "videos";
+    return "files";
+  }
+
+  function showItems() {
+    grid.innerHTML = "";
+
+    const visible =
+      currentSection === "all"
+        ? items
+        : items.filter(item => item.category === currentSection);
+
+    if (!visible.length) {
+      grid.innerHTML = `
+        <div class="empty">
+          Nothing here yet ✿
+        </div>
+      `;
+      return;
+    }
+
+    visible.forEach(item => {
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      if (item.category === "photos") {
+
+        const image = document.createElement("img");
+        image.src = item.url;
+        image.alt = item.name;
+
+        card.appendChild(image);
+
+      } else if (item.category === "videos") {
+
+        const video = document.createElement("video");
+
+        video.src = item.url;
+        video.muted = true;
+        video.loop = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+
+        /*
+          Videos automatically preview while they are
+          visible on screen.
+        */
+        item.video = video;
+
+        card.appendChild(video);
+
+      } else {
+
+        const file = document.createElement("div");
+        file.className = "file-card";
+
+        file.innerHTML = `
+          <div class="file-icon">📄</div>
+          <div>
+            <strong>${escapeHTML(item.name)}</strong>
+          </div>
+        `;
+
+        card.appendChild(file);
+      }
+
+      const info = document.createElement("div");
+      info.className = "card-info";
+
+      const title = document.createElement("strong");
+      title.textContent = item.name;
+
+      info.appendChild(title);
+      card.appendChild(info);
+
+      grid.appendChild(card);
+    });
+
+    setupVideoPreview();
+  }
+
+  function setupVideoPreview() {
+
+    const observer = new IntersectionObserver(
+      entries => {
+
+        entries.forEach(entry => {
+
+          const video = entry.target;
+
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+
+        });
+
+      },
+      {
+        threshold: 0.55
+      }
+    );
+
+    document
+      .querySelectorAll("video")
+      .forEach(video => observer.observe(video));
+  }
+
+  function escapeHTML(value) {
+    return value
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  upload.addEventListener("change", async () => {
+
+    const files = Array.from(upload.files);
+
+    if (!files.length) return;
+
+    for (const file of files) {
+
+      const category = getType(file);
+
+      status.textContent = `Adding ${file.name}...`;
+
+      /*
+        Temporary local preview.
+        The Cloudflare R2 upload endpoint will
+        replace this with permanent storage.
+      */
+
+      const url = URL.createObjectURL(file);
+
+      items.unshift({
+        name: file.name,
+        category: category,
+        url: url
+      });
+    }
+
+    showItems();
+
+    status.textContent =
+      `${files.length} item${files.length === 1 ? "" : "s"} added ✿`;
+
+    upload.value = "";
+  });
+
+  document.querySelectorAll("nav button").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      document
+        .querySelectorAll("nav button")
+        .forEach(btn => btn.classList.remove("active"));
+
+      button.classList.add("active");
+
+      currentSection = button.dataset.section;
+
+      sectionTitle.textContent =
+        currentSection === "all"
+          ? "Everything"
+          : currentSection.charAt(0).toUpperCase() +
+            currentSection.slice(1);
+
+      showItems();
+    });
+  });
+</script>
+
+</body>
+</html>      display: block;
       background: #000;
     }
     .video-info {
