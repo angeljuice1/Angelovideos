@@ -4,65 +4,180 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Angelo Videos</title>
-
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; }
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: #0d0d0f;
-      color: white;
-      min-height: 100vh;
+      color: #fff;
     }
-
     header {
-      padding: 25px;
+      padding: 28px 20px;
       text-align: center;
       background: #151519;
       border-bottom: 1px solid #29292f;
     }
-
-    header h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-
-    header p {
-      color: #999;
-    }
-
+    h1 { margin: 0 0 8px; }
+    header p { color: #999; margin: 0; }
     main {
       width: 90%;
       max-width: 1000px;
       margin: 40px auto;
     }
-
     .upload-box {
+      padding: 40px 20px;
+      text-align: center;
       background: #17171c;
       border: 2px dashed #444;
       border-radius: 16px;
-      padding: 45px 20px;
-      text-align: center;
       margin-bottom: 40px;
     }
+    .upload-box p { color: #999; }
+    input[type="file"] { display: none; }
+    .upload-button {
+      display: inline-block;
+      padding: 13px 24px;
+      background: #fff;
+      color: #000;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #status {
+      margin-top: 18px;
+      color: #aaa;
+      min-height: 20px;
+    }
+    #videoLibrary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+    .video-card {
+      background: #17171c;
+      border: 1px solid #29292f;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .video-card video {
+      width: 100%;
+      display: block;
+      background: #000;
+    }
+    .video-info {
+      padding: 15px;
+    }
+    .video-info h3 {
+      margin: 0;
+      font-size: 16px;
+      word-break: break-word;
+    }
+    .empty {
+      color: #777;
+      text-align: center;
+      padding: 30px;
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
 
-    .upload-box h2 {
-      margin-bottom: 12px;
+<body>
+
+<header>
+  <h1>Angelo Videos</h1>
+  <p>Your video library</p>
+</header>
+
+<main>
+
+  <section class="upload-box">
+    <h2>Upload a Video</h2>
+    <p>Choose a video to save to your library.</p>
+
+    <label for="videoUpload" class="upload-button">
+      Choose Video
+    </label>
+
+    <input
+      type="file"
+      id="videoUpload"
+      accept="video/*"
+    >
+
+    <div id="status"></div>
+  </section>
+
+  <section>
+    <h2>My Videos</h2>
+    <div id="videoLibrary">
+      <div class="empty">No videos uploaded yet.</div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const videoUpload = document.getElementById("videoUpload");
+  const videoLibrary = document.getElementById("videoLibrary");
+  const status = document.getElementById("status");
+
+  videoUpload.addEventListener("change", async () => {
+    const file = videoUpload.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("video/")) {
+      status.textContent = "Please choose a video file.";
+      return;
     }
 
-    .upload-box p {
-      color: #999;
-      margin-bottom: 20px;
-    }
+    status.textContent = "Uploading...";
 
-    input[type="file"] {
-      display: none;
-    }
+    try {
+      const response = await fetch("/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": file.type,
+          "X-Filename": encodeURIComponent(file.name)
+        },
+        body: file
+      });
 
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      status.textContent = "Upload complete!";
+
+      const card = document.createElement("div");
+      card.className = "video-card";
+
+      card.innerHTML = `
+        <video controls>
+          <source src="/video/${encodeURIComponent(file.name)}" type="${file.type}">
+        </video>
+        <div class="video-info">
+          <h3>${file.name}</h3>
+        </div>
+      `;
+
+      const empty = videoLibrary.querySelector(".empty");
+      if (empty) empty.remove();
+
+      videoLibrary.prepend(card);
+      videoUpload.value = "";
+
+    } catch (error) {
+      console.error(error);
+      status.textContent =
+        "Upload failed. We still need to add the Cloudflare upload function.";
+    }
+  });
+</script>
+
+</body>
+</html>
     .upload-button {
       display: inline-block;
       padding: 13px 24px;
