@@ -1,68 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Angelo Media</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+<title>Angelo Media</title>
 
-    * {
-      box-sizing: border-box;
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #55454f;
+
+  background:
+    radial-gradient(circle at 15% 15%, rgba(220,190,205,.45), transparent 30%),
+    radial-gradient(circle at 85% 80%, rgba(195,185,215,.35), transparent 30%),
+    #f4eee8;
+}
+
+header {
+  text-align: center;
+  padding: 50px 20px 25px;
+}
+
+.brand {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(48px, 10vw, 82px);
+  font-weight: normal;
+  color: #684f60;
+}
+
+.subtitle {
+  margin: 8px 0 25px;
+  color: #967f8b;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.upload-button {
+  display: inline-block;
+  padding: 14px 27px;
+  border: 1px solid #c9aeba;
+  border-radius: 30px;
+  background: rgba(255,255,255,.75);
+  color: #684f60;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 8px 25px rgba(90,65,80,.12);
+}
+
+.upload-button:hover {
+  transform: translateY(-2px);
+}
+
+input[type="file"] {
+  display: none;
+}
+
+#status {
+  min-height: 22px;
+  margin-top: 15px;
+  color: #967f8b;
+  font-size: 14px;
+}
+
+nav {
+  width: 92%;
+  max-width: 900px;
+  margin: 15px auto 35px;
+
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+nav button {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 25px;
+
+  background: transparent;
+  color: #806c76;
+
+  cursor: pointer;
+  font-size: 14px;
+}
+
+nav button:hover,
+nav button.active {
+  background: rgba(255,255,255,.8);
+  color: #684f60;
+}
+
+main {
+  width: 92%;
+  max-width: 1100px;
+  margin: auto;
+  padding-bottom: 60px;
+}
+
+.section-title {
+  margin: 0 0 20px;
+
+  font-family: Georgia, serif;
+  font-size: 36px;
+  font-weight: normal;
+
+  color: #684f60;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(250px, 1fr));
+
+  gap: 22px;
+}
+
+.card {
+  overflow: hidden;
+
+  background: rgba(255,255,255,.72);
+
+  border: 1px solid rgba(190,160,175,.55);
+  border-radius: 18px;
+
+  box-shadow:
+    0 12px 30px rgba(90,65,80,.10);
+}
+
+.card img,
+.card video {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+
+  display: block;
+
+  object-fit: cover;
+
+  background: #ddd4d0;
+}
+
+.card-info {
+  padding: 14px 16px;
+}
+
+.card-info strong {
+  display: block;
+
+  color: #684f60;
+
+  font-size: 14px;
+
+  word-break: break-word;
+}
+
+.file-card {
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 20px;
+}
+
+.file-icon {
+  width: 48px;
+  height: 48px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: #eadde4;
+
+  font-size: 22px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+
+  padding: 60px 20px;
+
+  text-align: center;
+
+  color: #a18f98;
+
+  font-family: Georgia, serif;
+
+  font-size: 25px;
+}
+
+@media (max-width: 600px) {
+
+  header {
+    padding-top: 30px;
+  }
+
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .card {
+    border-radius: 13px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <h1 class="brand">
+    Angelo Media
+  </h1>
+
+  <p class="subtitle">
+    photos · videos · files
+  </p>
+
+  <label
+    class="upload-button"
+    for="mediaUpload"
+  >
+    ✦ Add to my collection
+  </label>
+
+  <input
+    id="mediaUpload"
+    type="file"
+    accept="image/*,video/*,.pdf,.doc,.docx,.txt,.zip"
+    multiple
+  >
+
+  <div id="status"></div>
+
+</header>
+
+<nav>
+
+  <button
+    class="active"
+    data-section="all"
+  >
+    Everything
+  </button>
+
+  <button data-section="photos">
+    Photos
+  </button>
+
+  <button data-section="videos">
+    Videos
+  </button>
+
+  <button data-section="files">
+    Files
+  </button>
+
+</nav>
+
+<main>
+
+  <h2
+    class="section-title"
+    id="sectionTitle"
+  >
+    Everything
+  </h2>
+
+  <div
+    class="media-grid"
+    id="mediaGrid"
+  >
+
+    <div class="empty">
+      Your collection is waiting for you ✿
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+
+const upload =
+  document.getElementById("mediaUpload");
+
+const grid =
+  document.getElementById("mediaGrid");
+
+const status =
+  document.getElementById("status");
+
+const sectionTitle =
+  document.getElementById("sectionTitle");
+
+let currentSection = "all";
+
+const items = [];
+
+
+function getType(file) {
+
+  if (file.type.startsWith("image/")) {
+    return "photos";
+  }
+
+  if (file.type.startsWith("video/")) {
+    return "videos";
+  }
+
+  return "files";
+}
+
+
+function showItems() {
+
+  grid.innerHTML = "";
+
+  const visible =
+    currentSection === "all"
+      ? items
+      : items.filter(
+          item =>
+            item.category === currentSection
+        );
+
+  if (!visible.length) {
+
+    grid.innerHTML = `
+      <div class="empty">
+        Nothing here yet ✿
+      </div>
+    `;
+
+    return;
+  }
+
+
+  visible.forEach(item => {
+
+    const card =
+      document.createElement("div");
+
+    card.className = "card";
+
+
+    if (item.category === "photos") {
+
+      const image =
+        document.createElement("img");
+
+      image.src = item.url;
+
+      image.alt = item.name;
+
+      card.appendChild(image);
+
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: #493d45;
-      font-family: "DM Sans", sans-serif;
-      background:
-        radial-gradient(circle at 10% 10%, rgba(210, 174, 190, .35), transparent 30%),
-        radial-gradient(circle at 90% 80%, rgba(190, 176, 211, .30), transparent 30%),
-        #f4eee8;
+
+    else if (item.category === "videos") {
+
+      const video =
+        document.createElement("video");
+
+      video.src = item.url;
+
+      video.muted = true;
+
+      video.loop = true;
+
+      video.playsInline = true;
+
+      video.preload = "metadata";
+
+      card.appendChild(video);
+
     }
 
-    header {
-      text-align: center;
-      padding: 45px 20px 25px;
+
+    else {
+
+      const file =
+        document.createElement("div");
+
+      file.className = "file-card";
+
+      file.innerHTML = `
+        <div class="file-icon">
+          📄
+        </div>
+
+        <div>
+          <strong>
+            ${escapeHTML(item.name)}
+          </strong>
+        </div>
+      `;
+
+      card.appendChild(file);
+
     }
 
-    .brand {
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(48px, 10vw, 82px);
-      font-weight: 600;
-      color: #604c5b;
-      margin: 0;
-      letter-spacing: 1px;
+
+    const info =
+      document.createElement("div");
+
+    info.className = "card-info";
+
+
+    const title =
+      document.createElement("strong");
+
+    title.textContent =
+      item.name;
+
+
+    info.appendChild(title);
+
+    card.appendChild(info);
+
+    grid.appendChild(card);
+
+  });
+
+
+  setupVideoPreview();
+
+}
+
+
+function setupVideoPreview() {
+
+  const observer =
+    new IntersectionObserver(
+
+      entries => {
+
+        entries.forEach(entry => {
+
+          const video =
+            entry.target;
+
+
+          if (entry.isIntersecting) {
+
+            video
+              .play()
+              .catch(() => {});
+
+          }
+
+          else {
+
+            video.pause();
+
+          }
+
+        });
+
+      },
+
+      {
+        threshold: 0.55
+      }
+
+    );
+
+
+  document
+    .querySelectorAll("video")
+    .forEach(video =>
+      observer.observe(video)
+    );
+
+}
+
+
+function escapeHTML(value) {
+
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+upload.addEventListener(
+  "change",
+  async () => {
+
+    const files =
+      Array.from(upload.files);
+
+    if (!files.length) {
+      return;
     }
 
-    .subtitle {
-      margin: 2px 0 25px;
-      color: #8d7883;
-      font-size: 14px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
 
-    .upload-button {
-      display: inline-block;
-      padding: 13px 25px;
-      border: 1px solid #c7aab9;
-      border-radius: 30px;
-      background: rgba(255,255,255,.65);
-      color: #604c5b;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 6px 20px rgba(91,67,80,.10);
-      transition: .2s;
-    }
+    files.forEach(file => {
 
-    .upload-button:hover {
-      transform: translateY(-2px);
-      background: #fff;
-    }
+      const category =
+        getType(file);
 
+      const url =
+        URL.createObjectURL(file);
+
+
+      items.unshift({
+
+        name: file.name,
+
+        category: category,
+
+        url: url
+
+      });
+
+    });
+
+
+    showItems();
+
+
+    status.textContent =
+      `${files.length} item${
+        files.length === 1 ? "" : "s"
+      } added ✿`;
+
+
+    upload.value = "";
+
+  }
+);
+
+
+document
+  .querySelectorAll("nav button")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll("nav button")
+          .forEach(btn =>
+            btn.classList.remove("active")
+          );
+
+
+        button.classList.add("active");
+
+
+        currentSection =
+          button.dataset.section;
+
+
+        sectionTitle.textContent =
+          currentSection === "all"
+            ? "Everything"
+            : currentSection
+                .charAt(0)
+                .toUpperCase() +
+              currentSection.slice(1);
+
+
+        showItems();
+
+      }
+    );
+
+  });
+
+</script>
+
+</body>
+</html>
     input[type="file"] {
       display: none;
     }
