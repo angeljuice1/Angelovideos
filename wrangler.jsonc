@@ -1,1 +1,8 @@
-
+{
+  "r2_buckets": [
+    {
+      "binding": "VIDEOS",
+      "bucket_name": "angelovideos2"
+    }
+  ]
+}
