@@ -2,10 +2,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Upload a photo, video, or file to R2
+    // Upload media to R2
     if (request.method === "POST" && url.pathname === "/upload") {
       const filename = decodeURIComponent(
-        request.headers.get("X-Filename") || "untitled"
+        request.headers.get("X-Filename") || crypto.randomUUID()
       );
 
       const contentType =
@@ -31,13 +31,13 @@ export default {
       );
     }
 
-    // Display a file stored in R2
+    // Serve media from R2
     if (
       request.method === "GET" &&
       url.pathname.startsWith("/media/")
     ) {
       const filename = decodeURIComponent(
-        url.pathname.substring("/media/".length)
+        url.pathname.slice("/media/".length)
       );
 
       const object = await env.VIDEOS.get(filename);
@@ -54,11 +54,11 @@ export default {
       headers.set("etag", object.httpEtag);
 
       return new Response(object.body, {
-        headers: headers
+        headers
       });
     }
 
-    // Everything else comes from the website
+    // Everything else = your actual Angelo Media website
     return env.ASSETS.fetch(request);
   }
 };
